@@ -1,0 +1,222 @@
+<!--
+========================================================
+Innovation Tech Industries - calendar-gantt-tool
+innovation.tech.industries@gmail.com
+index.html:
+  --Markup for the calendar-gantt-tool
+========================================================
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <link href='css/fullcalendar.min.css' rel='stylesheet' />
+  <link href='css/fullcalendar.print.css' rel='stylesheet' media='print' />
+  <link href='css/bootstrap.min.css' rel='stylesheet' />
+  <link href='css/styles.css' rel='stylesheet' />
+  <link href='css/font-awesome.min.css' rel='stylesheet'> <!--Used for modal buttons-->
+  <script src='js/jquery-3.4.1.min.js'></script>
+  <script src='data/iti-tasks.js'></script>
+  <script src='lib/moment.min.js'></script>
+  <script src='js/bootstrap.bundle.min.js'></script>
+  <script src='js/tempusdominus-bootstrap-4.js'></script>
+  <link href='css/tempusdominus-bootstrap-4.min.css' rel='stylesheet'>
+  <script src='js/d3/d3.min.js'></script>
+  <script src='js/fullcalendar.min.js'></script>
+</head>
+
+<body>
+  <header class="main-header" role="banner">
+    <img src="img/northrop_grumman_logo.png" alt="Image" height="100" width="450" />
+  </header>
+  <!--Create view selection-->
+  <div class="form-group float-right">
+    <div class="custom-control custom-radio custom-control-inline">
+      <input type="radio" id="admin-view" name="change-view" class="custom-control-input" value="Admin">
+      <label class="custom-control-label" for="admin-view">Admin</label>
+    </div>
+    <div class="custom-control custom-radio custom-control-inline">
+      <input type="radio" id="read-only-view" name="change-view" class="custom-control-input" value="Read-Only">
+      <label class="custom-control-label" for="read-only-view">Read-Only</label>
+    </div>
+  </div>
+
+  <!--Task Modal that can be changed with jQuery based on adding or editing a task-->
+  <div class="modal" id="task-modal" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle">Add Task</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="task-submission" novalidate>
+          <div class="modal-body">
+            <fieldset id="fieldset-modal">
+              <div class="container">
+                <div class="row">
+                  <div class="form-group col-5">
+                    <label for="task-name">Task Name</label>
+                    <input type="text" class="form-control" id="task-name" placeholder="Enter a task name">
+                    <div class="invalid-feedback"> A unqiue task name is required. </div>
+                  </div>
+                  <div class="form-group col-5">
+                    <label for="new-task-type">Task Type</label>
+                    <input type="text" class="form-control" id="task-type" placeholder="Enter the type of task">
+                    <div class="invalid-feedback"> A task type is required to help categorize tasks. </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label for="priority">Priority (1-10)</label>
+                    <select class="form-control" id="task-priority">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row" id="date-inputs">
+                  <div class="form-group col-6">
+                    <label for="start-date">Start Date</label>
+                    <div class="input-group date" id="start-date" data-target-input="nearest">
+                      <input type="text" class="form-control datetimepicker-input" id="start-date-text"
+                        data-target="#start-date" />
+                      <div class="input-group-append" id="picker-button" data-target="#start-date"
+                        data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                      <div class="invalid-feedback"> Enter a valid date in YYYY-MM-DD HH:mm format.</div>
+                    </div>
+                  </div>
+                  <div class="form-group col-6">
+                    <label for="end-date">End Date</label>
+                    <div class="input-group date" id="end-date" data-target-input="nearest">
+                      <input type="text" class="form-control datetimepicker-input" id="end-date-text"
+                        data-target="#end-date" />
+                      <div class="input-group-append" id="picker-button" data-target="#end-date"
+                        data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                      <div class="invalid-feedback"> Enter a date in YYYY-MM-DD HH:mm format.</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-5">
+                    <label for="depend-select">Select a task that this one depends on:</label>
+                    <select class="form-control" id="depend-select"></select>
+                  </div>
+                  <div class="form-group col-7">
+                    <label for="task-description">Task Description</label>
+                    <input type="text" class="form-control" id="task-description"
+                      placeholder="Enter a task description">
+                    <div class="invalid-feedback"> Please enter a description for this task. </div>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <div class="modal-footer">
+            <div class="container">
+              <div class="row">
+                <div class="col-6 text-left">
+                  <button type="button" class="btn btn-danger" id="delete-task">Delete</button>
+                </div>
+                <div class="col-6 text-right">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary" id="confirm-task">Confirm</button>
+                  <div class="invalid-feedback"> Enter a valid date/time range. </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!--Create tab navigation for the calendar and Gantt chart-->
+  <div class="tab">
+    <ul class="nav nav-tabs" id="tab-nav" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active tablinks" id="calendar-tab" data-toggle="tab" href="#display-calendar" role="tab"
+          aria-controls="calendar" aria-selected="true">Calendar</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link tablinks" id="gantt-tab" data-toggle="tab" href="#display-gantt" role="tab"
+          aria-controls="gantt" aria-selected="true">Gantt Chart</a>
+      </li>
+    </ul>
+  </div>
+
+  <!--Bootstrap comes with tab switching natively in bootstrap.js-->
+  <div class="tab-content tabcontent" id="tabs">
+    <!--Panel for displaying calendar-->
+    <div class="tab-pane show active" id="display-calendar" role="tabpanel" aria-labelledby="calendar-tab">
+      <div class="container mb-2">
+        <div class="row">
+          <div class="col-4">
+            <div class="btn-group mx-2 prev-next" id="prev-next-cal" role="group" aria-label="Prev Next">
+              <button type="button" class="btn btn-secondary" id="prev">&#10094;</button>
+              <button type="button" class="btn btn-secondary" id="next">&#10095;</button>
+            </div>
+            <button type="button" class="btn btn-secondary mx-2" id="today">Today</button>
+          </div>
+          <div class="col-8">
+            <div class="btn-group mx-2 float-right" id="change-view-cal" role="group" aria-label="Change View">
+              <button type="button" class="btn btn-secondary" id="basicDay">Day</button>
+              <button type="button" class="btn btn-secondary active" id="month">Month</button>
+              <button type="button" class="btn btn-secondary" id="quarter">Quarter</button>
+              <button type="button" class="btn btn-secondary" id="year">Year</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Div containing entire calendar-->
+      <div id='calendar'></div>
+    </div>
+    <!--Panel for displaying Gantt chart-->
+    <div class="tab-pane" id="display-gantt" role="tabpanel" aria-labelledby="gantt-tab">
+      <div class="container mb-2">
+        <div class="row">
+          <div class="col-3">
+            <div class="btn-group mx-2 prev-next" id="prev-next-gantt" role="group" aria-label="Prev Next">
+              <button type="button" class="btn btn-secondary" id="prev">&#10094;</button>
+              <button type="button" class="btn btn-secondary" id="next">&#10095;</button>
+            </div>
+            <button type="button" class="btn btn-secondary font-weight-bold" title="Add Task"
+              id="add-task-btn">&#43;</button>
+          </div>
+          <div class="col-5 d-flex justify-content-center align-items-center">
+            <div id="date-header" class="text-center"></div>
+          </div>
+          <div class="col-4">
+            <div class="btn-group mx-2 float-right" id="change-view-gantt" role="group" aria-label="Change View">
+              <button type="button" class="btn btn-secondary" id="1day">Day</button>
+              <button type="button" class="btn btn-secondary" id="1month">Month</button>
+              <button type="button" class="btn btn-secondary active" id="3month">Quarter</button>
+              <button type="button" class="btn btn-secondary" id="1year">Year</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Divs containing the SVG gantt chart-->
+      <div id="gantt-container"></div>
+      <div id="xaxis"></div>
+    </div>
+  </div>
+  <script src='js/calendar.js'></script>
+  <script src='js/gantt.js'></script>
+  <script src='js/index.js'></script>
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+/*========================================================
+Innovation Tech Industries - calendar-gantt-tool
+innovation.tech.industries@gmail.com
+styles.css:
+  --styles for index.html gantt and calendar
+========================================================*/
+
+body {
+	margin: 40px 10px;
+	padding: 0;
+	font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+	font-size: 15px;
+}
+
+#calendar {
+	max-width: 1140px;
+  margin: 0 auto;
+}
+
+.fc-content {
+  cursor: pointer;
+}
+
+/*Limits Bootstrap popover size*/
+.popover {
+  font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+  min-width: 200px;
+  max-width: 300px;
+}
+
+.main-header {
+  text-align: center;
+}
+
+/*------------BEGIN Styling for Gantt Chart-------------*/
+#container {
+  margin: 0 auto;
+  width: 800px;
+  min-height: 400px;
+  overflow: visible;
+}
+
+#gantt-container {
+  height: 650px;
+  overflow-y: scroll;
+}
+
+#date-header {
+  font-size: 30px;
+}
+
+.svg {
+  width: 800px;
+  height: 400px;
+  overflow: visible;
+  position: absolute;
+}
+
+.grid .tick {
+  stroke: lightgrey;
+  opacity: 0.3;
+  shape-rendering: crispEdges;
+}
+
+.grid path {
+  stroke-width: 0;
+}
+
+/* style for the x and y axis*/
+.axis path,.axis line {
+	fill: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
+}
+/*------------END Styling for Gantt Chart-----------*/
+
+
+/*------------BEGIN styling for Tabs----------------*/
+.tab {
+  overflow: hidden;
+}
+
+/* Style the tab content */
+.tabcontent {
+  padding: 15px 12px;
+  border: 1px solid #dee2e6;
+  border-top: none;
+}
+/*-----------END styling for Tabs------------------*/
